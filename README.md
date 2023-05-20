@@ -7,7 +7,7 @@ Setup Venv to Ubuntu 22.04.2 with VMWare / asurada21
 <Setup Git>   
 sudo apt install git  
 git --version  
->> change directory to wnat to make local repository  
+(change directory to wnat to make local repository)  
 git clone [GITHUB's repository adress]  
 git pull  
 
