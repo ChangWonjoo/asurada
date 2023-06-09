@@ -1,0 +1,91 @@
+https://chat.openai.com/share/b33fd8de-f973-46f9-89cd-57355dad4da6
+
+
+
+#pip install obd
+#pip install pybluez
+
+
+import
+ obd
+import
+ serial
+import
+ serial.tools.list_ports
+
+def
+ 
+find_com_port
+():
+    ports = serial.tools.list_ports.comports()
+    
+for
+ port 
+in
+ ports:
+        
+if
+ 
+"Bluetooth"
+ 
+in
+ port.description:
+            
+return
+ port.device
+
+    
+return
+ 
+None
+
+
+port = find_com_port()
+if
+ port 
+is
+ 
+None
+:
+    
+print
+(
+"Bluetooth OBD-II device not found. Make sure it is paired and connected."
+)
+    exit()
+
+connection = obd.OBD(portstr=port)
+
+if
+ connection.is_connected():
+    
+print
+(
+"Connection successful!"
+)
+else
+:
+    
+print
+(
+"Unable to connect to the Bluetooth OBD-II device."
+)
+    exit()
+
+rpm = connection.query(obd.commands.RPM)
+if
+ rpm.is_successful():
+    
+print
+(
+"RPM:"
+, rpm.value)
+else
+:
+    
+print
+(
+"Unable to retrieve RPM data."
+)
+
+connection.close()
