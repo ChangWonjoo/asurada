@@ -17,3 +17,8 @@ git pull
 <Setup python>  
 sudo apt-get install python3  
 sudo apt-get install python3-pip
+
+
+# 230826
+Raspi - OBD2 connection success.
+Getting RPM & SPEED values & Printing values are success. 
