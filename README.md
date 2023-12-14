@@ -22,3 +22,7 @@ sudo apt-get install python3-pip
 # 230826
 Raspi - OBD2 connection success.
 Getting RPM & SPEED values & Printing values are success. 
+
+# 231214
+using Teamviewer - for making remote DEV enviroment.
+ >> sign up VNC and connection test. >> need to pay for using fee >> using teamviewer & smartphone's hotspot >>success.
