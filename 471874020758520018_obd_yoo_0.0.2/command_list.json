@@ -1,0 +1,13 @@
+{
+	"type" : "OBD",
+	"time_delay" : 0.5,
+	"status" : "STATUS",
+	"freeze_dtc" : "FREEZE_DTC",
+	"fuel_STATUS" : "FUEL_STATUS",
+	"engine_load" : "ENGINE_LOAD",
+	"engine_temp" : "COOLANT_TEMP",
+	"fuel_pressure" : "FUEL_PRESSURE",
+	"intake_pressure" : "INTAKE_PRESSURE",
+	"rpm" : "RPM",
+	"speed" : "SPEED"
+}

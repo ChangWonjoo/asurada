@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>dashboard</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            background-color: #000;
+            color: #fff;
+            font-family: Arial, sans-serif;
+        }
+        #dashboard {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            flex-direction: column;
+        }
+        .gauge-container {
+            position: relative;
+            width: 400px;
+            height: 400px;
+        }
+        #rpm-gauge {
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+        .value {
+            position: absolute;
+            text-align: center;
+            font-size: 24px;
+        }
+        #speed-value {
+            top: 180px;
+            left: 170px;
+            width: 60px;
+        }
+        #rpm-value {
+            top: 300px;
+            left: 170px;
+            width: 60px;
+        }
+        #gear-value {
+            top: 240px;
+            left: 185px;
+            font-size: 36px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div id="dashboard">
+        <div class="gauge-container">
+            <canvas id="rpm-gauge" width="400" height="400"></canvas>
+            <div id="speed-value" class="value">0 km/h</div>
+            <div id="rpm-value" class="value">0 RPM</div>
+            <div id="gear-value" class="value">N</div>
+        </div>
+    </div>
+    <script>
+        let rpmGauge;
+        const maxRPM = 6000;
+        const maxSpeed = 220;
+
+        const gearRatios = [4.30, 2.47, 1.52, 1.09, 0.89];
+        const finalDriveRatio = 4.52;
+        const tireWidth = 155;
+        const tireAspectRatio = 65;
+        const rimDiameterInches = 14;
+        const inchToMm = 25.4;
+
+        const tireHeight = tireWidth * (tireAspectRatio / 100);
+        const tireDiameter = 2 * tireHeight + (rimDiameterInches * inchToMm);
+        const tireCircumference = tireDiameter * Math.PI / 1000; // in meters
+
+        function createGauge(elementId, maxValue, color) {
+            const ctx = document.getElementById(elementId).getContext('2d');
+            return new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    datasets: [{
+                        data: [0, maxValue],
+                        backgroundColor: [color, '#333333'],
+                        borderWidth: 0
+                    }]
+                },
+                options: {
+                    circumference: 270,
+                    rotation: 225,
+                    cutout: '70%',
+                    responsive: false,
+                    maintainAspectRatio: true,
+                    animation: {
+                        duration: 100
+                    },
+                    plugins: {
+                        tooltip: { enabled: false },
+                        legend: { display: false }
+                    }
+                }
+            });
+        }
+
+        function initGauge() {
+            rpmGauge = createGauge('rpm-gauge', maxRPM, '#ff0000');
+        }
+
+        function updateRPMGauge(rpm, gear, speed) {
+            rpmGauge.data.datasets[0].data[0] = rpm;
+            rpmGauge.data.datasets[0].data[1] = maxRPM - rpm;
+            rpmGauge.update();
+            document.getElementById('rpm-value').textContent = `${Math.round(rpm)} RPM`;
+            document.getElementById('speed-value').textContent = `${Math.round(speed)} km/h`;
+            document.getElementById('gear-value').textContent = gear;
+        }
+
+        function getGear(rpm, speed) {
+            const speedMps = speed / 3.6; // km/h to m/s
+            const wheelRpm = (speedMps / tireCircumference) * 60;
+
+            for (let i = gearRatios.length - 1; i >= 0; i--) {
+                if (rpm / wheelRpm >= gearRatios[i] * finalDriveRatio) {
+                    return i + 1; // gear is 1-based
+                }
+            }
+            return 1;
+        }
+
+        function updateDashboard(data) {
+            const rpm = data.rpm;
+            const speed = data.speed;
+
+            const gear = getGear(rpm, speed);
+            updateRPMGauge(rpm, gear, speed);
+        }
+
+        // WebSocket setup
+        const socket = new WebSocket('ws://localhost:5678');
+
+        socket.onmessage = function(event) {
+            const data = JSON.parse(event.data);
+            updateDashboard(data);
+        };
+
+        initGauge();
+    </script>
+</body>
+</html>
