@@ -72,8 +72,8 @@
     <script>
         let rpmGauge;
         const maxRPM = 6000;
-        const maxSpeed = 220;
-        const retryInterval = 5000; // 5 seconds
+        const maxSpeed = 150;
+        const retryInterval = 3000; // 3 seconds
 
         const gearRatios = [4.30, 2.47, 1.52, 1.09, 0.89];
         const finalDriveRatio = 4.52;
@@ -121,7 +121,7 @@
         function updateRPMGauge(rpm, gear, speed) {
             rpmGauge.data.datasets[0].data[0] = rpm;
             rpmGauge.data.datasets[0].data[1] = maxRPM - rpm;
-            rpmGauge.update();
+            rpmGauge.update();//RPM 차트 업데이트
             document.getElementById('rpm-value').textContent = `${Math.round(rpm)} RPM`;
             document.getElementById('speed-value').textContent = `${Math.round(speed)} km/h`;
             document.getElementById('gear-value').textContent = gear;
@@ -170,8 +170,8 @@
             };
         }
 
-        initGauge();
         connectWebSocket();
+        initGauge();
     </script>
 </body>
 </html>

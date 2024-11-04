@@ -6,6 +6,7 @@ echo "Starting OBD service..." >> $LOGFILE
 date >> $LOGFILE
 
 sudo hciconfig hci0 up >> $LOGFILE 2>&1
+sudo rfcomm release 0 >> $LOGFILE 2>&1  # 기존 바인딩 해제
 sudo rmmod rfcomm >> $LOGFILE 2>&1
 sudo modprobe rfcomm >> $LOGFILE 2>&1
 sudo rfcomm bind 0 00:1D:A5:03:C2:34 >> $LOGFILE 2>&1
@@ -15,6 +16,7 @@ sleep 15 >> $LOGFILE 2>&1
 
 echo "Running Python script..." >> $LOGFILE
 sudo /usr/bin/python3 /home/asurada/Desktop/asurada/test_0826.py >> $LOGFILE 2>&1
+
 
 
 # echo "Starting OBD service..."
