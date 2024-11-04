@@ -66,8 +66,26 @@ sudo pip3 install websockets
 
 
  # 241102 restart development.
- using electron - setup devEnviroment.
+ using electron - setup devEnviroment. >> 일단 보류
  Node.js 설치
+
+# 241104 >> 자동실행 후 RPM 표시까지 성공.
+rc.local >> python test_0826.py 를 start.sh 로 진행하도록 변경
+** sh 파일 실행을 위해서는 sh <<파일절대디렉토리>> 로 작성 필요
+start.sh >> 오류 처리 코드가 없고, 아직 rfcomm 다루는 법에 대해 모르는게 많아서 최소 코드로 변경
+index.html >> css 95vh로 변경하여 스크롤 나오는 현상 없앰.
+
+
+
+
+
+
+
+
+
+
+
+
 
 
  ** bluetooth 관련 명령어
