@@ -68,4 +68,45 @@ sudo pip3 install websockets
  # 241102 restart development.
  using electron - setup devEnviroment.
  Node.js 설치
+
+
+ ** bluetooth 관련 명령어
+ 1. Bluetooth 서비스 상태 확인
+sudo systemctl status bluetooth
+
+2. Bluetooth 장치 상태 확인
+sudo hciconfig hci0 up
+hciconfig hci0
+
+3. Bluetooth 페어링 상태 확인
+sudo bluetoothctl 
+>>  power on
+    agent on
+    default-agent
+    scan on
+    pair <OBD_MAC_ADDRESS>
+    trust <OBD_MAC_ADDRESS>
+    connect <OBD_MAC_ADDRESS>
+
+4. RFCOMM 장치 바인딩 확인
+sudo rfcomm bind 0 <OBD_MAC_ADDRESS>
+ls /dev | grep rfcomm  # rfcomm0 가 있는지 확인
+
+5. 블루투스 설정 파일 확인
+sudo vim /etc/bluetooth/main.conf
+설정 파일에서 AutoEnable=true가 설정되어 있는지 확인합니다.
+
+6. 블루투스 모듈 재로드
+sudo modprobe -r btusb
+sudo modprobe btusb
+
+7. 시스템 로그 확인
+sudo journalctl -u bluetooth
+
+
+** 웹소켓 에러 대처
+sudo lsof -i :8765  #8765번 포트 사용중 확인
+sudo kill -9 1234  #PID 1234 kill
+
+
  
