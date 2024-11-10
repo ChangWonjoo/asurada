@@ -141,7 +141,7 @@
             for (let i = gearRatios.length - 1; i >= 0; i--) {
                 
                 // if (rpm / wheelRpm >= gearRatios[i] * finalDriveRatio) {
-                if (Math.abs(gearRatios[i] - currentRatio) < 5) {//현재 기어비가 지정기어비의 +-5 범위 내에 있을 때
+                if (Math.abs(gearRatios[i] - currentRatio)/gearRatios[i] < 0.1) {//현재 기어비가 지정기어비의 오차가 10%범위 내에 있을 때
                     return i + 1; // gear is 1-based
                 }
             }
