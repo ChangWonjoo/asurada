@@ -75,7 +75,8 @@
         const maxSpeed = 150;
         const retryInterval = 3000; // 3 seconds
 
-        const gearRatios = [4.30, 2.47, 1.52, 1.09, 0.89];
+        // const gearRatios = [4.30, 2.47, 1.52, 1.09, 0.89];
+        const gearRatios = [191.19, 112.26, 68.00, 49.11, 40.43];
         const finalDriveRatio = 4.52;
         const tireWidth = 155;
         const tireAspectRatio = 65;
@@ -128,15 +129,22 @@
         }
 
         function getGear(rpm, speed) {
-            const speedMps = speed / 3.6; // km/h to m/s
-            const wheelRpm = (speedMps / tireCircumference) * 60;
+            // const speedMps = speed / 3.6; // km/h to m/s
+            // const wheelRpm = (speedMps / tireCircumference) * 60;
+            const speedMps = speed; // km/h to m/s
+            currentRatio = rpm / speedMps;
+            
+            if(speedMps == 0){
+                return "N";
+            }
 
             for (let i = gearRatios.length - 1; i >= 0; i--) {
-                if (rpm / wheelRpm >= gearRatios[i] * finalDriveRatio) {
+                
+                // if (rpm / wheelRpm >= gearRatios[i] * finalDriveRatio) {
+                if (Math.abs(gearRatios[i] - currentRatio) < 5) {//현재 기어비가 지정기어비의 +-5 범위 내에 있을 때
                     return i + 1; // gear is 1-based
                 }
             }
-            return 1;
         }
 
         function updateDashboard(data) {
