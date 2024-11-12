@@ -87,14 +87,14 @@
         const tireDiameter = 2 * tireHeight + (rimDiameterInches * inchToMm);
         const tireCircumference = tireDiameter * Math.PI / 1000; // in meters
 
-        function createGauge(elementId, maxValue, color) {
+        function createGauge(elementId, lowerGearValue, maxValue, color1, color2) {
             const ctx = document.getElementById(elementId).getContext('2d');
             return new Chart(ctx, {
                 type: 'doughnut',
                 data: {
                     datasets: [{
-                        data: [0, maxValue],
-                        backgroundColor: [color, '#333333'],
+                        data: [0, lowerGearValue, maxValue],
+                        backgroundColor: [color1, color2, '#333333'],
                         borderWidth: 0
                     }]
                 },
@@ -116,12 +116,15 @@
         }
 
         function initGauge() {
-            rpmGauge = createGauge('rpm-gauge', maxRPM, '#ff0000');
+            rpmGauge = createGauge('rpm-gauge', 0, maxRPM, '#ff0000', '#222222');
         }
 
         function updateRPMGauge(rpm, gear, speed) {
+            const currentrpm = rpm;
+            const lowerGearValue = gear === 'N' ? 0 : gearRatios[gear - 1] * speed;
             rpmGauge.data.datasets[0].data[0] = rpm;
-            rpmGauge.data.datasets[0].data[1] = maxRPM - rpm;
+            rpmGauge.data.datasets[0].data[1] = Math.max(0, lowerGearValue - rpm);
+            rpmGauge.data.datasets[0].data[2] = Math.max(0, maxRPM - lowerGearValue);
             rpmGauge.update();//RPM 차트 업데이트
             document.getElementById('rpm-value').textContent = `${Math.round(rpm)} RPM`;
             document.getElementById('speed-value').textContent = `${Math.round(speed)} km/h`;
